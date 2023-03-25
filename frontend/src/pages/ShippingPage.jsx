@@ -20,7 +20,7 @@ function ShippingPage() {
         cart: {shippingAddress}  
     } = state;
 
-    const [fullName, setFullName] = useState(shippingAddress.fullName || ' ');
+    const [fullName, setFullName] = useState(shippingAddress.fullName || '');
     const [address, setAddress] = useState(shippingAddress.address || ' ');
     const [city, setCity] = useState(shippingAddress.city || ' ');
     const [postalCode, setPostalCode] = useState(shippingAddress.postalCode || ' ');

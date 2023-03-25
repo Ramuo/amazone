@@ -28,53 +28,59 @@ function Header() {
 
         //To remove shippingAddress from localStorage
         localStorage.removeItem('shippingAddress');
+
+        //To remove paymentMethod from localStorage
+        localStorage.removeItem('paymentMethod');
     };
 
     //RENDERED ELEMENTS:
     return (
     <header>
-        <Navbar bg="dark" variant="dark" >
+        <Navbar bg="dark" variant="dark" expand='lg' >
         <Container className='mt-3'>
             <LinkContainer to="/">
             <Navbar.Brand>amazone+</Navbar.Brand>
             </LinkContainer>
-            <Nav className='me-auto'>
-            <Link to='/cart' className='nav-link'>
-                Panier
-                {cart.cartItems.length > 0 && (
-                <Badge  pill bg='danger'>
-                    {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
-                </Badge>
-                )}
-            </Link>
-
-            {userInfo ? (
-               <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
-                    <LinkContainer to='profile'>
-                        <NavDropdown.Item>
-                            Profil
-                        </NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to='/orderhistory'>
-                        <NavDropdown.Item>
-                            Historique des commandes
-                        </NavDropdown.Item>
-                    </LinkContainer>
-                    <NavDropdown.Divider />
-                    <Link
-                    className='dropdown-item'
-                    to='#signout'
-                    onClick={signoutHandler}
-                    >
-                        Se déconnecter
-                    </Link>
-               </NavDropdown> 
-            ) : (
-                <Link className="nav-link" to="/signin">
-                    S'identifier
+            <Navbar.Toggle aria-controls='basic-navbar-nav'/>
+            <Navbar.Collapse id='basic-navbar-nav'>
+                <Nav className='me-auto w-100 justify-content-end' >
+                <Link to='/cart' className='nav-link'>
+                    Panier
+                    {cart.cartItems.length > 0 && (
+                    <Badge  pill bg='danger'>
+                        {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
+                    </Badge>
+                    )}
                 </Link>
-            )}
-            </Nav>
+
+                {userInfo ? (
+                <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
+                        <LinkContainer to='profile'>
+                            <NavDropdown.Item>
+                                Profil
+                            </NavDropdown.Item>
+                        </LinkContainer>
+                        <LinkContainer to='/orderhistory'>
+                            <NavDropdown.Item>
+                                Historique des commandes
+                            </NavDropdown.Item>
+                        </LinkContainer>
+                        <NavDropdown.Divider />
+                        <Link
+                        className='dropdown-item'
+                        to='#signout'
+                        onClick={signoutHandler}
+                        >
+                            Se déconnecter
+                        </Link>
+                </NavDropdown> 
+                ) : (
+                    <Link className="nav-link" to="/signin">
+                        S'identifier
+                    </Link>
+                )}
+                </Nav>
+            </Navbar.Collapse>
         </Container>
         </Navbar>
     </header>

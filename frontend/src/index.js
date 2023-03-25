@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import {PayPalScriptProvider} from '@paypal/react-paypal-js';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import './bootstrap.min.css'
 import './index.css';
@@ -12,7 +13,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <StoreProvider>
-      <App />
+      <PayPalScriptProvider deferLoading={true}>
+        <App />
+      </PayPalScriptProvider>
     </StoreProvider>
   </React.StrictMode>
 );
