@@ -36,12 +36,12 @@ main {
   
 }
 .btn-primary{
-  background-color: #f0c040; 
-  /* background-color: #ff6a95; */
+  /* background-color: #f0c040; 
+  color: #000; */
   outline-style: none;
   border-color: transparent;
-  color: #000;
-  /* color: #fff; */
+  background-color: #ff6a95; 
+  color: #fff; 
 }
 .products {
   display: flex;
@@ -49,7 +49,8 @@ main {
   justify-content: center;
 }
 .rating{
-  color: #ffc000; 
+  /* color: #ffc000;  */
+  color: #ff6a95; 
 }
 .product {
   border: 1px #404040 solid;

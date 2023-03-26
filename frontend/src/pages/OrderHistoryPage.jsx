@@ -6,27 +6,16 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import  {getError} from '../utils';
 import {Button} from 'react-bootstrap';
+import {OrderHistoryReducer} from '../context/order/orderHistoryReducer';
 
 
-const reducer = (state, action) => {
-    switch(action.type){
-        case 'FETCH_REQUEST':
-            return {...state, loading: true};
-        case 'FETCH_SUCCESS':
-            return {...state, orders: action.payload, loading: false}
-        case 'FETCH_FAIL':
-            return {...state, loading: false, error: action.payload }
-        default:
-            return {...state};
-    }
-}
 
 function OrderHistoryPage() {
     //STATE:
     const {state} = useContext(Store);
     const {userInfo} = state;
 
-    const [{loading, error, orders}, dispatch ] = useReducer(reducer, {
+    const [{loading, error, orders}, dispatch ] = useReducer(OrderHistoryReducer, {
         loading: true,
         error: '',
     });

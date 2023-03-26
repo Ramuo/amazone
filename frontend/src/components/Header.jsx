@@ -31,6 +31,7 @@ function Header() {
 
         //To remove paymentMethod from localStorage
         localStorage.removeItem('paymentMethod');
+        window.location.href = '/signin';
     };
 
     //RENDERED ELEMENTS:
@@ -39,7 +40,7 @@ function Header() {
         <Navbar bg="dark" variant="dark" expand='lg' >
         <Container className='mt-3'>
             <LinkContainer to="/">
-            <Navbar.Brand>amazone+</Navbar.Brand>
+            <Navbar.Brand>MEN-STORE+</Navbar.Brand>
             </LinkContainer>
             <Navbar.Toggle aria-controls='basic-navbar-nav'/>
             <Navbar.Collapse id='basic-navbar-nav'>

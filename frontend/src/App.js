@@ -11,6 +11,7 @@ import SignupPage from './pages/SignupPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
 import OrderHistoryPage from './pages/OrderHistoryPage';
 import OrderPage from './pages/OrderPage';
+import ProfilePage from './pages/ProfilePage';
 import {Container} from 'react-bootstrap';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -31,6 +32,7 @@ function App() {
               <Route path='/cart' element={<CartPage/>}/>
               <Route path='/signin' element={<SigninPage/>}/>
               <Route path='/signup' element={<SignupPage/>}/>
+              <Route path='/profile' element={<ProfilePage/>}/>
               <Route path='/placeorder' element={<PlaceOrderPage/>}/>
               <Route path='/order/:id' element={<OrderPage/>}/>
               <Route path='/orderHistory' element={<OrderHistoryPage/>}/>
