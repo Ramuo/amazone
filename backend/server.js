@@ -27,9 +27,6 @@ app.get('/api/keys/paypal', (req, res) => {
 });
 
 //ROUTES
-app.get('/', (req, res) => {
-  res.send('API is running....')
-});
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
@@ -37,16 +34,15 @@ app.use('/api/orders', orderRoutes);
 
 //TO SERVE FRONTEND
 const __dirname = path.resolve();
-if(process.env.NODE_ENV === 'production'){
-  //Set build folder as static
-  app.use(express.static(path.join(__dirname, '../frontend/build')))
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '/frontend/build')))
 
-
-  app.get('*', (req, res) => res.sendFile(__dirname, '../', 'frontend', 'build', 'index.html'))
-}else{
-  // to create a route
-  app.get('/', (req , res)=> {
-      res.status(200).json({message: 'Welcome to the support Desk API'})
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+  )
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running....')
   })
 }
 
