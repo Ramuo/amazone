@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import dotenv from 'dotenv';
 import colors from 'colors';
 import connectDB from './config/db.js';
@@ -35,11 +36,18 @@ app.use('/api/orders', orderRoutes);
 
 
 //TO SERVE FRONTEND
-const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, "/frontend/build")));
-app.get("*", (req, res) =>
-  res.sendFile(path.join(__dirname, "/frontend/build/index.html"))
-);
+if(process.env.NODE_ENV === 'production'){
+  //Set build folder as static
+  app.use(express.static(path.join(__dirname, '../frontend/build')))
+
+
+  app.get('*', (req, res) => res.sendFile(__dirname, '../', 'frontend', 'build', 'index.html'))
+}else{
+  // to create a route
+  app.get('/', (req , res)=> {
+      res.status(200).json({message: 'Welcome to our e-commerce shop'})
+  })
+}
 
 
 //ERROR MIDDLEWARE
