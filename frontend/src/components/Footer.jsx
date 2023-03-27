@@ -5,7 +5,7 @@ function Footer() {
     <footer>
         <Container>
           <Row>
-            <Col className="text-center">Copyright &copy; amazone+</Col>
+            <Col className="text-center">Copyright &copy; MEN-STORE+</Col>
           </Row>
         </Container>
     </footer>
