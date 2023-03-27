@@ -35,18 +35,11 @@ app.use('/api/orders', orderRoutes);
 
 
 //TO SERVE FRONTEND
-if(process.env.NODE_ENV === 'production'){
-  //Set build folder as static
-  app.use(express.static(path.join(__dirname, '../frontend/build')))
-
-
-  app.get('*', (req, res) => res.sendFile(__dirname, '../', 'frontend', 'build', 'index.html'))
-}else{
-  // to create a route
-  app.get('/', (req , res)=> {
-      res.status(200).json({message: 'Welcome to our e-commerce shop'})
-  })
-}
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "/frontend/build")));
+app.get("*", (req, res) =>
+  res.sendFile(path.join(__dirname, "/frontend/build/index.html"))
+);
 
 
 //ERROR MIDDLEWARE
