@@ -10,6 +10,15 @@ const getProducts = asyncHandler(async (req, res) => {
 
     res.json(products)
 });
+//@desc     Fetch by categories
+//@route    GET /api/products/category
+//@access   Public
+const getProductByCategory = asyncHandler(async (req, res) => {
+    const categories = await Product.find().distinct('category');
+    
+    res.send(categories);
+});
+
 
 //@desc     Fetch single product
 //@route    GET /api/products/:id
@@ -41,5 +50,6 @@ const getProductBySlug = asyncHandler(async (req, res) => {
 export {
     getProducts,
     getProductById,
-    getProductBySlug
+    getProductBySlug, 
+    getProductByCategory,
 };
