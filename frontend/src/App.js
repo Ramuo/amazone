@@ -15,7 +15,9 @@ import SignupPage from './pages/SignupPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
 import OrderHistoryPage from './pages/OrderHistoryPage';
 import OrderPage from './pages/OrderPage';
+import SearchPage from './pages/SearchPage';
 import ProfilePage from './pages/ProfilePage';
+import SearchBox from './components/SearchBox';
 import {toast} from 'react-toastify';
 import {getError} from './utils';
 import {
@@ -35,12 +37,14 @@ function App() {
    const {state, dispatch: ctxDispatch} = useContext(Store);
    const {cart, userInfo} = state;
 
+   
+
 
    // state for sidebar is open
    const [sidebarIsOpen, setSidebarIsOpen] = useState();
    const [categories, setCategories] = useState([]);
 
-
+  // 
    useEffect(() =>{
     const fetchCategories = async () => {
       try {
@@ -100,6 +104,7 @@ function App() {
               </LinkContainer>
               <Navbar.Toggle aria-controls='basic-navbar-nav'/>
               <Navbar.Collapse id='basic-navbar-nav'>
+                <SearchBox/>
                   <Nav className='me-auto w-100 justify-content-end' >
                   <Link to='/cart' className='nav-link'>
                       Panier
@@ -154,7 +159,7 @@ function App() {
               {categories.map((category)=> (
                 <Nav.Item key={category}>
                   <LinkContainer
-                  to={`/search?category=${category}`}
+                  to={{pathname: '/search', search:`category=${category}`}}
                   onClick={() => setSidebarIsOpen(false)}
                   >
                     <Nav.Link>{category}</Nav.Link>
@@ -169,6 +174,7 @@ function App() {
             <Routes>
               <Route path="/product/:slug" element={<ProductPage />} />
               <Route path='/cart' element={<CartPage/>}/>
+              <Route path='/search' element={<SearchPage/>}/>
               <Route path='/signin' element={<SigninPage/>}/>
               <Route path='/signup' element={<SignupPage/>}/>
               <Route path='/profile' element={<ProfilePage/>}/>

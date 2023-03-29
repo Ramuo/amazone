@@ -2,7 +2,7 @@ const products = [
     {
         name: 'Nike Slim shirt',
         slug: 'nike-slim-shirt',
-        category: 'Shirts',
+        category: 'Chemises',
         image: '/images/p1.jpg', // 679px × 829px
         price: 120,
         countInStock: 10,
@@ -14,7 +14,7 @@ const products = [
       {
         name: 'Adidas Fit Shirt',
         slug: 'adidas-fit-shirt',
-        category: 'Shirts',
+        category: 'Chemises',
         image: '/images/p2.jpg',
         price: 250,
         countInStock: 20,
@@ -26,7 +26,7 @@ const products = [
       {
         name: 'Nike Slim Pant',
         slug: 'nike-slim-pant',
-        category: 'Pants',
+        category: 'Pantalons',
         image: '/images/p3.jpg',
         price: 25,
         countInStock: 10,
@@ -38,7 +38,7 @@ const products = [
       {
         name: 'Adidas Fit Pant',
         slug: 'adidas-fit-pant',
-        category: 'Pants',
+        category: 'Pantalons',
         image: '/images/p4.jpg',
         price: 65,
         countInStock: 5,
