@@ -1,32 +1,42 @@
-import jwt from 'jsonwebtoken';
-import asyncHandler from 'express-async-handler';
-import User from '../models/userModel.js';
+import jwt from 'jsonwebtoken'
+import asyncHandler from 'express-async-handler'
+import User from '../models/userModel.js'
 
+const protect = asyncHandler(async (req, res, next) => {
+  let token
 
-const  protect = asyncHandler(async(req, res, next) => {
-    let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    try {
+      token = req.headers.authorization.split(' ')[1]
 
-    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
-        try {
-            //Let' s get the token from header
-            token = req.headers.authorization.split(' ')[1];
-            // Let's us verify the token
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            //Let's get user from token
-            req.user = await User.findById(decoded.id).select('-password'); 
+      const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-            next();
-        } catch (error) {
-            console.log(error)
-            res.status(401)
-            throw new Error('Pas autorisé')
-        }
+      req.user = await User.findById(decoded.id).select('-password')
+
+      next()
+    } catch (error) {
+      console.error(error)
+      res.status(401)
+      throw new Error('Not authorized, token failed')
     }
-    //Let's check if there is no token
-    if(!token){
-        res.status(401)
-        throw new Error('Pas autorisé')
-    }
-});
+  }
 
-export {protect}
+  if (!token) {
+    res.status(401)
+    throw new Error('Not authorized, no token')
+  }
+})
+
+const isAdmin = (req, res, next) => {
+  if (req.user && req.user.isAdmin) {
+    next()
+  } else {
+    res.status(401)
+    throw new Error('Not authorized as an admin')
+  }
+}
+
+export { protect, isAdmin }

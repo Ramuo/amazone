@@ -17,7 +17,11 @@ import OrderHistoryPage from './pages/OrderHistoryPage';
 import OrderPage from './pages/OrderPage';
 import SearchPage from './pages/SearchPage';
 import ProfilePage from './pages/ProfilePage';
+import DashboardPage from './pages/DashboardPage';
+import ProductListPage from './pages/ProductListPage';
 import SearchBox from './components/SearchBox';
+import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
 import {toast} from 'react-toastify';
 import {getError} from './utils';
 import {
@@ -26,9 +30,11 @@ import {
     Nav,
     Badge,
     NavDropdown,
-    Button
+    Button,
+    Dropdown
 } from 'react-bootstrap';
 import Footer from './components/Footer'; 
+
 
  
 
@@ -124,7 +130,7 @@ function App() {
                           </LinkContainer>
                           <LinkContainer to='/orderhistory'>
                               <NavDropdown.Item>
-                                  Historique des commandes
+                                  Historique 
                               </NavDropdown.Item>
                           </LinkContainer>
                           <NavDropdown.Divider />
@@ -140,6 +146,23 @@ function App() {
                       <Link className="nav-link" to="/signin">
                           S'identifier
                       </Link>
+                  )}
+
+                  {userInfo && userInfo.isAdmin && (
+                    <NavDropdown title="Admin" id="admin-nav-dropdown">
+                      <LinkContainer to='/admin/dashboard'>
+                        <Dropdown.Item>Tableau de bord</Dropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to='/admin/products'>
+                        <Dropdown.Item>Produits</Dropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to='/admin/orders'>
+                        <Dropdown.Item>Commandes</Dropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to='/admin/users'>
+                        <Dropdown.Item>Utilisateurs</Dropdown.Item>
+                      </LinkContainer>
+                    </NavDropdown>
                   )}
                   </Nav>
               </Navbar.Collapse>
@@ -177,12 +200,42 @@ function App() {
               <Route path='/search' element={<SearchPage/>}/>
               <Route path='/signin' element={<SigninPage/>}/>
               <Route path='/signup' element={<SignupPage/>}/>
-              <Route path='/profile' element={<ProfilePage/>}/>
+              {/* <Route path='/profile' element={<ProfilePage/>}/> */}
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>}
+              />
               <Route path='/placeorder' element={<PlaceOrderPage/>}/>
-              <Route path='/order/:id' element={<OrderPage/>}/>
-              <Route path='/orderHistory' element={<OrderHistoryPage/>}/>
+              <Route path='/order/:id' element={
+                <ProtectedRoute>
+                  <OrderPage/>
+                </ProtectedRoute>}
+              />
+              <Route path='/orderHistory' element={
+                <ProtectedRoute>
+                  <OrderHistoryPage/>
+                </ProtectedRoute>}
+              />
               <Route path='/shipping' element={<ShippingPage/>}/>
               <Route path='/payment' element={<PaymentPage/>}/>
+              {/* ADMIN ROUTES */}
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <AdminRoute>
+                    <DashboardPage />
+                  </AdminRoute>
+                }
+              ></Route>
+               <Route
+                path="/admin/products"
+                element={
+                  <AdminRoute>
+                    <ProductListPage />
+                  </AdminRoute>
+                }
+              ></Route>
               <Route path="/" element={<HomePage />} />
             </Routes>
           </Container>

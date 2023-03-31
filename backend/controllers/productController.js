@@ -11,10 +11,55 @@ const getProducts = asyncHandler(async (req, res) => {
 
     res.json(products)
 });
+
+// @desc    Create a product
+// @route   POST /api/products
+// @access  Private/Admin
+const createProduct = asyncHandler(async (req, res) => {
+    const product = new Product({
+        name: 'sample name ' + Date.now(),
+        slug: 'sample-name-' + Date.now(),
+        image: '/images/p1.jpg',
+        price: 0,
+        category: 'sample category',
+        brand: 'sample brand',
+        countInStock: 0,
+        rating: 0,
+        numReviews: 0,
+        description: 'sample description',
+    })
+  
+    const createdProduct = await product.save()
+    res.status(201).json(createdProduct)
+  })
+
+const PAGE_SIZE = 3;
+//@desc     Admin fetch products & pagination
+//@route    GET /api/products/admin
+//@access   Private
+const getAdmin = asyncHandler(async (req, res) => { 
+    const { query } = req;
+    const page = query.page || 1;
+    const pageSize = query.pageSize || PAGE_SIZE;
+
+    const products = await Product.find()
+      .skip(pageSize * (page - 1))
+      .limit(pageSize);
+
+    const countProducts = await Product.countDocuments();
+
+    res.json({
+        products,
+        countProducts,
+        page,
+        pages: Math.ceil(countProducts / pageSize),
+      });
+});
+
+
 //@desc     Fetch by search
 //@route    GET /api/products/search
 //@access   Public
-const PAGE_SIZE = 3;
 const getProductBySearch = asyncHandler(async (req, res) => {
     const { query } = req;
     const pageSize = query.pageSize || PAGE_SIZE;
@@ -132,8 +177,10 @@ const getProductBySlug = asyncHandler(async (req, res) => {
 
 export {
     getProducts,
+    createProduct,
     getProductById,
-    getProductBySlug, 
+    getProductBySlug,
+    getAdmin, 
     getProductBySearch,
     getProductByCategories,
 };
