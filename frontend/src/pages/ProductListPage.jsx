@@ -14,17 +14,26 @@ import MessageBox from '../components/MessageBox';
 
 function ProductListPage() {
     //STATE:
-    const {state} = useContext(Store);
-    const {userInfo} = state;
-    const [{loading, error, pages, products, loadingCreate}, dispatch] = useReducer(ProductListReducer, {
-        loading: true,
-        error: '',
+    const [
+      {
+        loading,
+        error,
+        products,
+        pages,
+        loadingCreate,
+      },
+      dispatch,
+    ] = useReducer(ProductListReducer, {
+      loading: true,
+      error: '',
     });
-
     const navigate = useNavigate();
     const {search} = useLocation();
     const sp = new URLSearchParams(search);
     const page = sp.get('page') || 1;
+
+    const { state } = useContext(Store);
+    const { userInfo } = state;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -43,27 +52,27 @@ function ProductListPage() {
 
     //FUNCTIONS:
     const createHandler = async () => {
-        if (window.confirm('Are you sure to create?')) {
-          try {
-            dispatch({ type: 'CREATE_REQUEST' });
-            const { data } = await axios.post(
-              '/api/products',
-              {},
-              {
-                headers: { Authorization: `Bearer ${userInfo.token}` },
-              }
-            );
-            toast.success('product created successfully');
-            dispatch({ type: 'CREATE_SUCCESS' });
-            navigate(`/admin/product/${data.product._id}`);
-          } catch (err) {
-            toast.error(getError(error));
-            dispatch({
-              type: 'CREATE_FAIL',
-            });
-          }
+      if (window.confirm('Are you sure to create?')) {
+        try {
+          dispatch({ type: 'CREATE_REQUEST' });
+          const { data } = await axios.post(
+            '/api/products',
+            {},
+            {
+              headers: { Authorization: `Bearer ${userInfo.token}` },
+            }
+          );
+          toast.success('product created successfully');
+          dispatch({ type: 'CREATE_SUCCESS' });
+          navigate(`/admin/product/${data.product._id}`);
+        } catch (err) {
+          toast.error(getError(error));
+          dispatch({
+            type: 'CREATE_FAIL',
+          });
         }
-      };
+      }
+    };
 
 
     //RENDERED ELEMENT:
