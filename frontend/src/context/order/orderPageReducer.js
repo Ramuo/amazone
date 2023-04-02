@@ -25,7 +25,7 @@ export const OrderReducer = (state, action) => {
       case 'PAY_SUCCESS':
         return {
           ...state, 
-          loadingPay: false, 
+          loadingPay: false,  
           successPay: true
         };
       case 'PAY_FAIL':
@@ -40,7 +40,78 @@ export const OrderReducer = (state, action) => {
           loadingPay: false, 
           successPay: false
         };
+      case 'DELIVER_REQUEST':
+        return {
+          ...state,
+          loadingDeliver: true,
+        };
+        case 'DELIVER_SUCCESS':
+          return {
+            ...state,
+            loadingDeliver: false,
+            successDeliver: true,
+          };
+        case 'DELIVER_FAIL':
+          return {
+            ...state,
+            loadingDeliver: false,
+          };
+        case 'DELIVER_RESET':
+          return {
+            ...state,
+            loadingDeliver: false,
+            successDeliver: false,
+          };
       default:
         return state;
     }
 }
+
+// Order reducer for orderListPage
+export const OrderListReducer = (state, action) => {
+  switch(action.type){
+    case 'FETCH_REQUEST':
+      return {
+        ...state,
+        loading: true
+      };
+    case 'FETCH_SUCCESS':
+      return {
+        ...state,
+        orders: action.payload,
+        loading: false
+      };
+    case 'FETCH_FAIL':
+      return {
+        ...state,
+        loading: false,
+        error: action.payload
+      };
+    case 'DELETE_REQUEST':
+      return {
+        ...state,
+        loadingDelete: true,
+        successDelete: false
+      };
+    case 'DELETE_SUCCESS':
+      return {
+        ...state,
+        loadingDelete: false,
+        successDelete: true,
+      };
+    case 'DELETE_FAIL':
+      return {
+        ...state,
+        loadingDelete: false,
+      };
+    case 'DELETE_RESET':
+      return {
+        ...state,
+        loadingDelete: false,
+        successDelete: false
+      };
+    default:
+      return state;
+  }
+}
+

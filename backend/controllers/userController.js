@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 import bcrypt from 'bcryptjs';
 import generateToken from '../utils/generateToken.js';
 import User from '../models/userModel.js';
-
+ 
 
 
 //@desc     Signin user & get token (LOGIN)
@@ -71,6 +71,14 @@ const signupUser = asyncHandler(async (req, res) => {
    
 });
 
+// @desc    Get all users
+// @route   GET /api/users
+// @access  Private/Admin
+const getUsers = asyncHandler(async (req, res) => {
+    const users = await User.find({})
+    res.json(users)
+  });
+
 //@desc     Update user profile
 //@route    PUT /api/users/profile
 //@access   Private
@@ -101,9 +109,72 @@ const updateUserProfile = asyncHandler(async(req, res) => {
     }
 });
 
+// @desc    Delete user
+// @route   DELETE /api/users/:id
+// @access  Private/Admin
+const deleteUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+
+    if(user){
+        if(user.email === 'admin@example.com'){
+            res.status(400).json({message: 'Vous ne pouvez pas supprimé un utilisateur admin'})
+        }
+        await user.deleteOne();
+        res.json({message: 'Utilisateur supprimé'});
+        return;
+    }else{
+        res.status(404)
+        throw new Error('Utilisateur non trouvé')
+    }
+  })
+
+// @desc    Get user by ID
+// @route   GET /api/users/:id
+// @access  Private/Admin
+const getUserById = asyncHandler(async (req, res) => {
+   const user = await User.findById(req.params.id).select('-password');
+
+   if(user){
+    res.json(user)
+   }else{
+    res.status(404)
+    throw new Error('Utilisateur non trouvé')
+   }
+  });
+
+// @desc    Update user
+// @route   PUT /api/users/:id
+// @access  Private/Admin
+const updateUser = asyncHandler(async (req, res) => {
+   const user = await User.findById(req.params.id);
+
+   if(user){
+    user.name = req.body.name || user.name
+    user.email = req.body.email || user.email
+    user.isAdmin = req.body.isAdmin || user.isAdmin
+
+    const updatedUser = await user.save();
+
+    res.json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isAdmin: updatedUser.isAdmin,
+    })
+   }else{
+    res.status(404)
+    throw new Error('Utilisateur non trouvé');
+   }
+  });
+  
+
 
 export {
     signinUser,
     signupUser,
     updateUserProfile,
+    getUsers,
+    deleteUser,
+    getUserById,
+    updateUser, 
 }

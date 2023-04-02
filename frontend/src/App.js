@@ -19,6 +19,10 @@ import SearchPage from './pages/SearchPage';
 import ProfilePage from './pages/ProfilePage';
 import DashboardPage from './pages/DashboardPage';
 import ProductListPage from './pages/ProductListPage';
+import ProductEditPage from './pages/ProductEditPage';
+import OrderListPage from './pages/OrderListPage';
+import UserListPage from './pages/UserListPage';
+import UserEditPage from './pages/UserEditPage';
 import SearchBox from './components/SearchBox';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
@@ -226,6 +230,22 @@ function App() {
                   <AdminRoute>
                     <DashboardPage />
                   </AdminRoute>
+                } 
+              ></Route>
+               <Route
+                path="/admin/orders"
+                element={
+                  <AdminRoute>
+                    <OrderListPage />
+                  </AdminRoute>
+                }
+              ></Route>
+               <Route
+                path="/admin/users"
+                element={
+                  <AdminRoute>
+                    <UserListPage />
+                  </AdminRoute>
                 }
               ></Route>
                <Route
@@ -233,6 +253,22 @@ function App() {
                 element={
                   <AdminRoute>
                     <ProductListPage />
+                  </AdminRoute>
+                }
+              ></Route>
+               <Route
+                path="/admin/product/:id"
+                element={
+                  <AdminRoute>
+                    <ProductEditPage />
+                  </AdminRoute>
+                }
+              ></Route>
+               <Route
+                path="/admin/user/:id"
+                element={
+                  <AdminRoute>
+                    <UserEditPage />
                   </AdminRoute>
                 }
               ></Route>

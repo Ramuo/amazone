@@ -10,33 +10,87 @@ const getProducts = asyncHandler(async (req, res) => {
     const products = await Product.find({});
 
     res.json(products)
-});
+}); 
+
+//@desc     Delete  product
+//@route    GET /api/products/:id
+//@access   Private/isAdmin
+const deleteProduct = asyncHandler(async (req, res) => { 
+    const product = await Product.findById(req.params.id);
+
+    if(product){
+        await product.deleteOne();
+        res.json({message: 'Produit supprimé'})
+    }else{
+        res.status(404)
+        throw new Error('Produit non trouvé')
+    }
+}); 
 
 // @desc    Create a product
 // @route   POST /api/products
-// @access  Private/Admin
+// @access  Private/isAdmin
 const createProduct = asyncHandler(async (req, res) => {
-    const product = new Product({
+    const newProduct = new Product({
         name: 'sample name ' + Date.now(),
         slug: 'sample-name-' + Date.now(),
         image: '/images/p1.jpg',
         price: 0,
+        user: req.user._id,
         category: 'sample category',
         brand: 'sample brand',
         countInStock: 0,
         rating: 0,
         numReviews: 0,
         description: 'sample description',
-    })
-  
-    const createdProduct = await product.save()
-    res.status(201).json(createdProduct)
-  })
+      });
+      const product = await newProduct.save();
+      res.status(201).json({product });
+  });
+
+//desc      update a product
+//@aroute   PUT /api/products/:id
+//@access   Private/isAdmin
+const updateProduct = asyncHandler(async (req, res) => { 
+    const {
+        name,
+        slug,
+        price,
+        description,
+        image,
+        images,
+        brand,
+        category,
+        countInStock
+    } = req.body;
+
+    const product = await Product.findById(req.params.id);
+
+    if(product){
+        product.name = name,
+        product.slug = slug,
+        product.price = price,
+        product.description = description,
+        product.image = image,
+        product.images = images,
+        product.brand = brand,
+        product.category = category,
+        product.countInStock = countInStock
+
+        const updatedProduct = await product.save();
+        res.json(updatedProduct)
+    }else{
+        res.status(404)
+        throw new Error ('Produit non trouvé')
+    }
+
+    
+});
 
 const PAGE_SIZE = 3;
 //@desc     Admin fetch products & pagination
 //@route    GET /api/products/admin
-//@access   Private
+//@access   Private/isAdmin
 const getAdmin = asyncHandler(async (req, res) => { 
     const { query } = req;
     const page = query.page || 1;
@@ -177,6 +231,8 @@ const getProductBySlug = asyncHandler(async (req, res) => {
 
 export {
     getProducts,
+    deleteProduct,
+    updateProduct,
     createProduct,
     getProductById,
     getProductBySlug,

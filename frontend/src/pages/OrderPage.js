@@ -14,7 +14,8 @@ import {
     Col,
     Image,
     Card,
-    ListGroup
+    ListGroup,
+    Button
 } from 'react-bootstrap';
 
 
@@ -26,7 +27,7 @@ function OrderPage() {
     const {userInfo} = state;
 
     //state from orderReducer
-    const [{loading, error, order, successPay, loadingPay}, dispatch] = useReducer(OrderReducer, {
+    const [{loading, error, order, successPay, loadingPay, loadingDeliver, successDeliver}, dispatch] = useReducer(OrderReducer, {
         loading: true,
         order: {},
         error: '',
@@ -101,7 +102,7 @@ function OrderPage() {
             return navigate('/login');
         }
 
-        if(!order._id || successPay || (order._id && order._id !== orderId )){
+        if(!order._id || successPay || successDeliver || (order._id && order._id !== orderId )){
             fetchOrder();
             if(successPay){
                 dispatch({type: 'PAY_RESET'});
@@ -123,9 +124,24 @@ function OrderPage() {
             loadPaypalScript();
         }
 
-    }, [order, userInfo, navigate, orderId, paypalDispatch, successPay ]);
+    }, [order, userInfo, navigate, orderId, paypalDispatch, successPay, successDeliver ]);
 
     //FUNCTIONS:
+    const deliverOrderHandler = async () => {
+        try {
+            dispatch({type: 'DELIVER_REQUEST'});
+            const {data} = await axios.put(`/api/orders/${order._id}/deliver`, 
+            {},
+            {
+                headers:{Authorization: `Bearer ${userInfo.token}`}
+            });
+            dispatch({type: 'DELIVER_SUCCESS', payload: data});
+            toast.success('Commande livrée');
+        } catch (err) {
+            toast.error(getError(err));
+            dispatch({type: 'DELIVER_FAIL'});
+        }
+    }
 
 
 
@@ -251,6 +267,19 @@ function OrderPage() {
                                         </div>
                                     )}
                                     {loadingPay && <LoadingBox></LoadingBox>}
+                                </ListGroup.Item>
+                            )}
+                            {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                                <ListGroup.Item>
+                                   {loadingDeliver && <LoadingBox></LoadingBox>}
+                                   <div className='d-grid'>
+                                        <Button
+                                        type='button'
+                                        onClick={deliverOrderHandler} 
+                                        >
+                                            Livré
+                                        </Button>
+                                    </div> 
                                 </ListGroup.Item>
                             )}
                             </ListGroup>

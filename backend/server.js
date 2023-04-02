@@ -7,6 +7,7 @@ import {errorHandler, notFound} from './middleware/errorMiddleware.js';
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import  orderRoutes from  './routes/orderRoutes.js'
+import uploadRouter from './routes/uploadRoutes.js';
 
 dotenv.config();
 
@@ -15,9 +16,9 @@ connectDB();
 
 // Initialize de express app
 const app = express();
- 
 
-//SET UP THE BODY PARSER
+
+//SET UP THE BODY PARSER 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
@@ -27,6 +28,7 @@ app.get('/api/keys/paypal', (req, res) => {
 });
 
 //ROUTES
+app.use('/api/upload', uploadRouter);
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);

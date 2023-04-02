@@ -97,6 +97,25 @@ const getOrderById = asyncHandler(async (req, res) => {
   }
 })
 
+// @desc    Update order to delivered
+// @route   PUT /api/orders/:id/deliver
+// @access  Private/Admin
+const updateOrderToDelivered = asyncHandler (async (req, res) => {
+  const order = await Order.findById(req.params.id)
+
+  if(order){
+    order.isDelivered = true
+    order.deliveredAt = Date.now();
+
+    const updatedOrder = await order.save();
+
+    res.json(updatedOrder)
+  }else{
+    res.status(404)
+    throw new Error('Commande introuvable');
+  }
+});
+
 // @desc    To pay order
 // @route   GET /api/orders/:id/pay
 // @access  Private
@@ -117,14 +136,42 @@ const toPay = asyncHandler(async (req, res) => {
     res.status(404).json({message: 'Order Not found'});
   }
 })
+ 
+// @desc    Get all orders
+// @route   GET /api/orders
+// @access  Private/Admin
+const getOrders = asyncHandler(async (req, res) => {
+  
+  const orders = await Order.find().populate('user', 'name');
+
+  res.json(orders)
+});
+
+// @desc    Delete order
+// @route   DELETE /api/orders/:id
+// @access  Private/Admin
+const deleteOrder = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if(order){
+    await order.deleteOne();
+    res.json({message: 'Commande supprimée'})
+  }else{
+    res.status(404)
+    throw new Error('Commande introuvable')
+  }
+  
+});
 
 
 
 export {
     addOrderItems,
     getOrderById,
+    updateOrderToDelivered,
     toPay,
     getSummary,
     getOrderDetails,
-    
+    getOrders,
+    deleteOrder 
 }
