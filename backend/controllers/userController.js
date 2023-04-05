@@ -75,8 +75,8 @@ const signupUser = asyncHandler(async (req, res) => {
 // @route   GET /api/users
 // @access  Private/Admin
 const getUsers = asyncHandler(async (req, res) => {
-    const users = await User.find({})
-    res.json(users)
+    const users = await User.find({});
+    res.json(users);
   });
 
 //@desc     Update user profile
@@ -108,6 +108,7 @@ const updateUserProfile = asyncHandler(async(req, res) => {
         throw new Error("Utilisateur non trouvé")
     }
 });
+
 
 // @desc    Delete user
 // @route   DELETE /api/users/:id

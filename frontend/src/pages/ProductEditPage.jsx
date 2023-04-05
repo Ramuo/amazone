@@ -3,7 +3,14 @@ import axios from 'axios';
 import { useParams, useNavigate} from 'react-router-dom';
 import { Store } from '../Store';
 import { ProductEditReducer } from '../context/products/ProductsReducer';
-import {Button, Container, Form, FormGroup, FormLabel} from 'react-bootstrap'
+import {
+    Button, 
+    Container, 
+    Form, 
+    FormGroup, 
+    FormLabel,
+    ListGroup,
+} from 'react-bootstrap'
 import { getError } from '../utils';
 import {toast} from 'react-toastify';
 import LoadingBox from '../components/LoadingBox';
@@ -99,7 +106,8 @@ function ProductEditPage() {
         }
       };
 
-      const uploadFileHandler = async (e) => {
+      //To upload file
+      const uploadFileHandler = async (e, forImages) => {
         const file = e.target.files[0];
         const bodyFormData = new FormData();
         bodyFormData.append('file', file);
@@ -114,14 +122,23 @@ function ProductEditPage() {
 
             dispatch({type: 'UPLOAD_SUCCESS'});
 
-            toast.success('Image téléchargée avec succès');
-            setImage(data.secure_url)
+            if(forImages){
+                setImages([...images, data.secure_url])
+            }else{
+                setImage(data.secure_url);
+            }
+            toast.success('Image téléchargée. Cliquer ici pour mettre à jour ')
         } catch (err) {
             toast.error(getError(err));
             dispatch({type: 'UPLOAD_FAIL', payload: getError(err)});
         }
       };
 
+      //To delete file
+      const deleteFileHandler = async (fileName) => {
+        setImages(images.filter((x) => x !== fileName));
+        toast.success('Image supprimée. Cliquer ici pour mettre à jour')
+      }
 
     //RENDERED ELEMENTS:
     return (
@@ -169,8 +186,32 @@ function ProductEditPage() {
                         ></Form.Control>
                     </FormGroup>
                     <FormGroup className='mb-3' controlId='imageFile'>
-                        <Form.Label>Upload File</Form.Label>
+                        <Form.Label>Télécharger une image</Form.Label>
                         <Form.Control type='file' onChange={uploadFileHandler}/>
+                        {loadingUpload && <LoadingBox></LoadingBox>}
+                    </FormGroup>
+
+                    <FormGroup className='mb-3' controlId='additionalImage'>
+                        <Form.Label>Ajouter des images</Form.Label>
+                        {images.length === 0 && <MessageBox variant='info'>Pas d'image</MessageBox>}
+                        <ListGroup variant='flush'>
+                            {images.map((x) => (
+                                <ListGroup.Item key={x}>
+                                    {x}
+                                    <Button variant='light' onClick={() => {deleteFileHandler(x)}}>
+                                        <i className='fa fa-times-circle'></i>
+                                    </Button>
+                                </ListGroup.Item>
+                            ))}
+                        </ListGroup>
+                    </FormGroup>
+
+                    <FormGroup className='mb-3' controlId='additionalImageFile'>
+                        <Form.Label>Ajouter une image</Form.Label>
+                        <Form.Control 
+                        type='file' 
+                        onChange={(e) => uploadFileHandler(e, true)}
+                        />
                         {loadingUpload && <LoadingBox></LoadingBox>}
                     </FormGroup>
 

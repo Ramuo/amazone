@@ -9,6 +9,7 @@ import {
     getProductByCategories,
     getProductById,
     getProductBySlug,
+    createProductReview,
   
 } from '../controllers/productController.js';
 import {protect, isAdmin} from '../middleware/authMiddleware.js'  
@@ -20,6 +21,7 @@ const router = express.Router();
 
 //ROUTES:
 router.route('/').get(getProducts).post(protect, isAdmin, createProduct)
+router.route('/:id/reviews').post(protect, createProductReview)
 router.route('/categories').get(getProductByCategories)  
 router.route('/admin').get(protect, isAdmin, getAdmin) 
 router.route('/search').get(getProductBySearch) 
